@@ -1,0 +1,1 @@
+export const dataNavbar = ["Giới Thiệu", "Đào Tạo", "Tuyển Sinh", "Các Khoa", "Nghiên Cứu", "Sinh Viên", "Thư Viện", "Liên Kết"]

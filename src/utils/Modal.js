@@ -1,0 +1,8 @@
+export const ModalType = {
+    ADD_LOP: "ADD_LOP",
+    ADD_GIAOVIEN: "ADD_GIAOVIEN",
+    ADD_SINHVIEN: "ADD_SINHVIEN",
+    ADD_KHOA: "ADD_KHOA",
+    ADD_HOITHAO: "ADD_HOITHAO",
+    DEFAULT: ""
+}
