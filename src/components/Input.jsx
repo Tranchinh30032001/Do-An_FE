@@ -3,13 +3,13 @@
 import React, { memo, useCallback, useState } from "react";
 import { cn } from "../utils/cn";
 
-function FieldInput({ label, name, placeholder, type = "text", className, required, ...props }) {
+function FieldInput({ label, name, placeholder, type = "text", className, required, value, ...props }) {
   return (
-    <div className={cn("relative my-3")}>
+    <div className={cn("relative mt-4")}>
       <div className={cn("flex items-center w-full", className)}>
         {label && (
           <label
-            className={cn("w-[100px] font-medium flex-shrink-0 text-black", {
+            className={cn("font-medium flex-shrink-0 text-black", {
               "after:content-['*'] after:ml-1 after:text-red-500": required,
             })}
             htmlFor={name}
@@ -17,8 +17,9 @@ function FieldInput({ label, name, placeholder, type = "text", className, requir
             {label}
           </label>
         )}
-        <div className="flex items-center w-full relative mt-1">
+        <div className="flex items-center w-full relative">
           <input
+            value={value}
             {...props}
             type={type}
             id="first_name"

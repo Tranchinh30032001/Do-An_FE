@@ -17,7 +17,7 @@ function App() {
         <Route path={login.path} element={<login.component />} />
         <Route path={signup.path} element={<signup.component />} />
         <Route path={home.path} element={<home.component />} />
-        <Route path="/info-student" element={<InforStudent />} />
+        {/* <Route path="/app/" element={<InforStudent />} /> */}
         <Route path="/app/*" element={<Layout />} />
       </Routes>
     </Router>

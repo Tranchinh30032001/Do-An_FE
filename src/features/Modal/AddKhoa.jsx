@@ -5,6 +5,8 @@ import { useDispatch } from "react-redux";
 import { setClose } from "../../store/slice/stateSlice";
 import axios from "axios";
 import { alertSuccess, alertError } from "../../utils/alert";
+import { setAddSuccess } from "../../store/slice/activeSlice";
+import { instanceAxios } from "../../services/axios";
 
 function AddKhoa() {
   const [maKhoa, setMakhoa] = useState();
@@ -17,12 +19,13 @@ function AddKhoa() {
 
   const handleSave = async () => {
     try {
-      const res = await axios.post("http://localhost:3055/api/v1/qldt/create-khoa", {
+      const res = await instanceAxios.post("http://localhost:3055/api/v1/qldt/create-khoa", {
         khoa_id: maKhoa,
         ten_khoa: tenKhoa,
       });
       if (res.data.metadata.code === 201) {
         alertSuccess("Thêm Khoa thành công");
+        dispatch(setAddSuccess(true));
       }
     } catch (error) {
       alertError("Thêm Khoa thất bại");

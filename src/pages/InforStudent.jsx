@@ -13,17 +13,10 @@ function InforStudent() {
 
   return (
     <main>
-      <Header />
-
-      <section className="App-section w-[900px] h-[400px] mx-auto">
-        <div className="App-section-title"> Html5-qrcode React demo</div>
-        <br />
-        <br />
-        <br />
-        <Html5QrcodePlugin fps={10} qrbox={400} disableFlip={false} qrCodeSuccessCallback={onNewScanResult} />
+      <section className="App-section w-[1100px] h-[200px] mx-auto overflow-hidden">
+        <Html5QrcodePlugin fps={10} qrbox={200} disableFlip={false} qrCodeSuccessCallback={onNewScanResult} />
         <ResultContainerPlugin results={decodedResults} />
       </section>
-      {/* <InfoStudent /> */}
     </main>
   );
 }

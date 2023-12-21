@@ -8,11 +8,20 @@ import AddLop from "../Modal/AddLop";
 import { useDispatch, useSelector } from "react-redux";
 import { cn } from "../../utils/cn";
 import Button from "../../components/Button";
-import { setClose } from "../../store/slice/stateSlice";
+import { setClose, setState } from "../../store/slice/stateSlice";
 import axios from "axios";
+import DetailSinhVien from "../Detail/DetailSinhVien";
+import DetailGiaoVien from "../Detail/DetailGiaoVien";
+import Delete from "../Modal/Delete";
 
 function ModalLayout() {
-  const { bodyType, isOpen, title } = useSelector((state) => state.state);
+  const { bodyType, isOpen, title, size } = useSelector((state) => state.stateSlice);
+  const isUpdate = title?.includes("Update");
+  const dispatch = useDispatch();
+
+  const handleClose = () => {
+    dispatch(setClose());
+  };
 
   return (
     <div
@@ -22,11 +31,18 @@ function ModalLayout() {
         hidden: !isOpen,
       })}
     >
-      <div className="w-auto h-auto rounded-lg overflow-hidden min-w-[600px] min-h-[200px] py-4 bg-white text-white text-[20px] font-bold">
+      <div
+        className={cn(
+          "w-auto h-auto rounded-lg overflow-hidden min-w-[1200px] min-h-[200px] pb-10 bg-white text-white text-[20px] font-bold",
+          {
+            "min-w-[800px]": size,
+          }
+        )}
+      >
         <div className="p-2 bg-blue-400">
           <h2>{title}</h2>
         </div>
-        <div className="px-4">
+        <div className="px-4 mt-8">
           {
             {
               [ModalType.ADD_LOP]: <AddLop />,
@@ -34,6 +50,9 @@ function ModalLayout() {
               [ModalType.ADD_HOITHAO]: <AddHoiThao />,
               [ModalType.ADD_SINHVIEN]: <AddSinhVien />,
               [ModalType.ADD_KHOA]: <AddKhoa />,
+              [ModalType.DETAIL_SINHVIEN]: <DetailSinhVien update={isUpdate} />,
+              [ModalType.DETAIL_GIAOVIEN]: <DetailGiaoVien />,
+              [ModalType.DELETE]: <Delete onClose={handleClose} />,
               [ModalType.DEFAULT]: <div></div>,
             }[bodyType]
           }

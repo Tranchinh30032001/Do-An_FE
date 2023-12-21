@@ -1,7 +1,240 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import FieldInput from "../../components/Input";
+import Button from "../../components/Button";
+import FieldSelect from "../../components/FieldSelect";
+import { useDispatch } from "react-redux";
+import { setClose } from "../../store/slice/stateSlice";
+import { alertError, alertSuccess } from "../../utils/alert";
+import axios from "axios";
+import { useDropzone } from "react-dropzone";
+import { UploadIcon } from "../../assets/imgs";
+import { setAddSuccess } from "../../store/slice/activeSlice";
+import FieldCalender from "../../components/FieldCalendar";
+import { cn } from "../../utils/cn";
+import dayjs from "dayjs";
+import { instanceAxios } from "../../services/axios";
+
+const IMAGE_MAX_SIZE = 5000000;
 
 function AddGiaoVien() {
-  return <div>AddGiaoVien</div>;
+  const [cccd, setCccd] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [msgv, setMsgv] = useState("");
+  const [ten, setTen] = useState("");
+  const [gioiTinh, setGioiTinh] = useState("");
+  const [quequan, setQuequan] = useState("");
+  const [chuNhiem, setChuNhiem] = useState("");
+  const [trinhDo, setTrinhDo] = useState("");
+  const [ngaySinh, setNgaySinh] = useState("");
+  const [khoa, setKhoa] = useState("");
+
+  const [urlThumbnail, setUrlThumbnail] = useState("");
+  const [base64Thumbnail, setBase64Thumbnail] = useState("");
+  const dispatch = useDispatch();
+
+  //Call API
+  const [lopApi, setLopApi] = useState([]);
+  const [khoaApi, setKhoaApi] = useState([]);
+
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        const resLop = instanceAxios.get("http://localhost:3055/api/v1/qldt/all-class");
+        const resKhoa = instanceAxios.get("http://localhost:3055/api/v1/qldt/all-khoa");
+
+        const [lop, khoa] = await Promise.all([resLop, resKhoa]);
+
+        setLopApi(lop.data.metadata.allClass);
+        setKhoaApi(khoa.data.metadata.allKhoa);
+      } catch (error) {
+        throw new Error(error);
+      }
+    };
+    fetch();
+  }, []);
+
+  const onDrop = useCallback((acceptedFiles) => {
+    if (acceptedFiles?.length) {
+      const url = URL.createObjectURL(acceptedFiles[0]);
+      const reader = new FileReader();
+
+      reader.onload = (event) => {
+        const base64String = event.target.result;
+        setBase64Thumbnail(base64String);
+      };
+      reader.readAsDataURL(acceptedFiles[0]);
+      setUrlThumbnail(url);
+    }
+  }, []);
+
+  const { getInputProps, getRootProps } = useDropzone({
+    onDrop,
+    accept: { "image/*": [".jpeg", ".jpg", ".png", ".webp", ".gif", ".psd", ".svg", ".bmp"] },
+    maxSize: IMAGE_MAX_SIZE,
+  });
+
+  const handleSave = async () => {
+    const data = {
+      data: {
+        msgv,
+        ho_ten: ten,
+        ngay_sinh: ngaySinh.startDate,
+        gioi_tinh: gioiTinh,
+        que_quan: quequan,
+        email,
+        phone,
+        khoa_id: khoa,
+        avatar: base64Thumbnail,
+        role_id: 2,
+        trinh_do: trinhDo,
+        cccd,
+      },
+    };
+    try {
+      const res = await instanceAxios.post("http://localhost:3055/api/v1/qldt/signup-giaovien", data);
+      if (res.data.metadata.code === 201) {
+        alertSuccess("Thêm Giáo Viên thành công");
+        dispatch(setAddSuccess(true));
+      }
+    } catch (error) {
+      alertError("Thêm Giáo Viên thất bại");
+      throw new Error(error);
+    } finally {
+      dispatch(setClose());
+    }
+  };
+
+  const handleCancel = () => {
+    dispatch(setClose());
+  };
+  return (
+    <div className="grid grid-cols-5 gap-10">
+      <div className="col-span-2">
+        <FieldSelect
+          onChange={(e) => {
+            setTrinhDo(e.target.value);
+          }}
+          label="Trình Độ"
+        >
+          {["Đại Học", "Thạc Sỹ", "Tiến Sỹ"].map((item) => (
+            <option className="text-[20px]" value={item} key={crypto.randomUUID()}>
+              {item}
+            </option>
+          ))}
+        </FieldSelect>
+        <FieldInput
+          onChange={(e) => setCccd(e.target.value)}
+          label="Số CCCD"
+          className="flex-col items-start"
+          required={true}
+        />
+        <FieldInput
+          onChange={(e) => setPhone(e.target.value)}
+          label="Số điện thoại"
+          className="flex-col items-start"
+          required={true}
+        />
+        <FieldInput
+          onChange={(e) => setEmail(e.target.value)}
+          label="Email"
+          className="flex-col items-start"
+          required={true}
+        />
+        <div className="w-full mt-4 relative">
+          <label className="block text-black mb-4">Upload Avatar</label>
+          <div
+            style={{ userSelect: "none" }}
+            disabled
+            className="w-full  border-dashed border-2 border-yellow-400 rounded-xl p-4 cursor-pointer flex flex-col items-center max-h-[200px] md:max-h-[300px] overflow-hidden"
+            {...getRootProps()}
+          >
+            <div className="flex flex-col items-center">
+              <p className="text-black">JPG, PNG, WEBM, MAX 100MB</p>
+              <img src={UploadIcon} className="w-[40px] md:w-[80px] m-2 bg-black" />
+              <p className="text-black">Drag & drop file here</p>
+              <p className="text-black">or Browser media on your device</p>
+              <input {...getInputProps()} />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="col-span-3">
+        <FieldInput
+          onChange={(e) => setMsgv(e.target.value)}
+          label="Mã Giảng Viên"
+          className="flex-col items-start"
+          required={true}
+        />
+        <FieldInput
+          onChange={(e) => setTen(e.target.value)}
+          label="Tên Giảng Viên"
+          className="flex-col items-start"
+          required={true}
+        />
+        <FieldSelect
+          value={gioiTinh}
+          onChange={(e) => {
+            setGioiTinh(e.target.value);
+          }}
+          label="Giới Tính"
+        >
+          {["Nữ", "Nam"].map((item) => (
+            <option className="text-[20px]" key={crypto.randomUUID()} value={item}>
+              {item}
+            </option>
+          ))}
+        </FieldSelect>
+        <div className="mt-4">
+          <label
+            className={cn("font-medium flex-shrink-0 text-black after:content-['*'] after:ml-1 after:text-red-500")}
+          >
+            Ngày Sinh
+          </label>
+          <FieldCalender value={ngaySinh} onChange={setNgaySinh} />
+        </div>
+        <FieldInput
+          onChange={(e) => setQuequan(e.target.value)}
+          label="Quê Quán"
+          className="flex-col items-start"
+          required={true}
+        />
+        <FieldSelect
+          value={chuNhiem}
+          onChange={(e) => {
+            setChuNhiem(e.target.value);
+          }}
+          label="Chủ Nhiệm"
+        >
+          {lopApi?.length > 0 &&
+            lopApi?.map((item) => (
+              <option className="text-[20px]" value={item.lop_id} key={crypto.randomUUID()}>
+                {item.ten_lop}
+              </option>
+            ))}
+        </FieldSelect>
+        <FieldSelect
+          value={khoa}
+          onChange={(e) => {
+            setKhoa(e.target.value);
+          }}
+          label="Khoa"
+        >
+          {khoaApi?.length > 0 &&
+            khoaApi?.map((item) => (
+              <option className="text-[20px]" value={item.khoa_id} key={crypto.randomUUID()}>
+                {item.ten_khoa}
+              </option>
+            ))}
+        </FieldSelect>
+
+        <div className="flex items-start justify-end gap-4 mt-6">
+          <Button onClick={handleCancel} name="Cancel" className="bg-red-500 rounded-lg" />
+          <Button onClick={handleSave} name="Save" className="bg-blue-400 rounded-lg" />
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default AddGiaoVien;

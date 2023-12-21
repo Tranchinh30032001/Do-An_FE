@@ -1,26 +1,46 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { cn } from "../../utils/cn";
 import { ClassIcon } from "../../assets/imgs";
 import { FaRegUser, FaLayerGroup } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import clsx from "clsx";
+import useSelection from "antd/es/table/hooks/useSelection";
+import { useSelector } from "react-redux";
 
 function Sidebar({ className }) {
   const navigate = useNavigate();
+  const { qlActive } = useSelector((state) => state.active);
+
+  const [active, setActive] = useState(qlActive);
+
+  useEffect(() => {
+    setActive(qlActive);
+  }, [qlActive]);
 
   return (
     <div className="min-h-screen flex flex-col flex-auto flex-shrink-0 antialiased bg-gray-50 text-gray-800">
       <div className="fixed flex flex-col top-0 left-0 w-64 bg-white h-full border-r">
-        <div className="flex items-center justify-center h-14 border-b">
-          <div>Quản Lý Sinh Viên</div>
+        <div className="flex items-center justify-center h-20 border-b bg-[#5272F2]">
+          <div className="text-white font-semibold">Quản Lý Sinh Viên</div>
         </div>
         <div className="overflow-y-auto overflow-x-hidden flex-grow">
-          <ul className="flex flex-col py-4 space-y-1">
-            <li onClick={() => navigate("/app/portal")}>
+          <ul className="flex flex-col space-y-1">
+            <li
+              onClick={() => {
+                setActive("Trang Chủ");
+                navigate("/app/portal");
+              }}
+            >
               <a
                 href="#"
-                className="relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 text-gray-600 hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6"
+                className={clsx(
+                  "relative flex flex-row items-center h-11 focus:outline-none text-gray-600 hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6",
+                  {
+                    "bg-blue-400": active === "Trang Chủ",
+                  }
+                )}
               >
                 <span className="inline-flex justify-center items-center ml-4">
                   <svg
@@ -41,10 +61,20 @@ function Sidebar({ className }) {
                 <span className="ml-2 text-sm tracking-wide truncate">Trang Chủ</span>
               </a>
             </li>
-            <li onClick={() => navigate("/app/quanly-khoa")}>
+            <li
+              onClick={() => {
+                setActive("Khoa");
+                navigate("/app/quanly-khoa");
+              }}
+            >
               <a
                 href="#"
-                className="relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 text-gray-600 hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6"
+                className={clsx(
+                  "relative flex flex-row items-center h-11 focus:outline-none text-gray-600 hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6",
+                  {
+                    "bg-blue-400": active === "Khoa",
+                  }
+                )}
               >
                 <span className="inline-flex justify-center items-center ml-4">
                   <svg
@@ -65,10 +95,20 @@ function Sidebar({ className }) {
                 <span className="ml-2 text-sm tracking-wide truncate">Khoa</span>
               </a>
             </li>
-            <li onClick={() => navigate("/app/quanly-lop")}>
+            <li
+              onClick={() => {
+                setActive("Lớp");
+                navigate("/app/quanly-lop");
+              }}
+            >
               <a
                 href="#"
-                className="relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 text-gray-600 hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6"
+                className={clsx(
+                  "relative flex flex-row items-center h-11 focus:outline-none text-gray-600 hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6",
+                  {
+                    "bg-blue-400": active === "Lớp",
+                  }
+                )}
               >
                 <span className="inline-flex justify-center items-center ml-4">
                   <FaLayerGroup />
@@ -76,10 +116,20 @@ function Sidebar({ className }) {
                 <span className="ml-2 text-sm tracking-wide truncate">Lớp</span>
               </a>
             </li>
-            <li onClick={() => navigate("/app/quanly-giaovien")}>
+            <li
+              onClick={() => {
+                setActive("Giáo Viên");
+                navigate("/app/quanly-giaovien");
+              }}
+            >
               <a
                 href="#"
-                className="relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 text-gray-600 hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6"
+                className={clsx(
+                  "relative flex flex-row items-center h-11 focus:outline-none text-gray-600 hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6",
+                  {
+                    "bg-blue-400": active === "Giáo Viên",
+                  }
+                )}
               >
                 <span className="inline-flex justify-center items-center ml-4">
                   <FaRegUser />
@@ -87,10 +137,20 @@ function Sidebar({ className }) {
                 <span className="ml-2 text-sm tracking-wide truncate">Giáo Viên</span>
               </a>
             </li>
-            <li onClick={() => navigate("/app/quanly-sinhvien")}>
+            <li
+              onClick={() => {
+                setActive("Sinh Viên");
+                navigate("/app/quanly-sinhvien");
+              }}
+            >
               <a
                 href="#"
-                className="relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 text-gray-600 hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6"
+                className={clsx(
+                  "relative flex flex-row items-center h-11 focus:outline-none text-gray-600 hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6",
+                  {
+                    "bg-blue-400": active === "Sinh Viên",
+                  }
+                )}
               >
                 <span className="inline-flex justify-center items-center ml-4">
                   <FaRegUser />
@@ -98,14 +158,25 @@ function Sidebar({ className }) {
                 <span className="ml-2 text-sm tracking-wide truncate">Sinh Viên</span>
               </a>
             </li>
-            <li className="">
+            <li
+              onClick={() => {
+                setActive("Quản Lý Điểm Danh");
+                navigate("/app/quanly-hoithao");
+              }}
+              className=""
+            >
               <a
                 href="#"
-                className="relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 text-gray-600 hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6"
+                className={clsx(
+                  "relative flex flex-row items-center h-11 focus:outline-none text-gray-600 hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6",
+                  {
+                    "bg-blue-400": active === "Quản Lý Điểm Danh",
+                  }
+                )}
               >
                 <div className="flex flex-row items-center h-8 gap-2 px-5">
                   <img src={ClassIcon} className="w-5" />
-                  <div className="text-sm font-light tracking-wide text-gray-500">Quản Lý Điểm Danh</div>
+                  <div className="text-sm font-light tracking-wide text-gray-500">Quản Lý Hội Thảo</div>
                 </div>
               </a>
             </li>

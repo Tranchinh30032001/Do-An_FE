@@ -15,9 +15,9 @@ const menu = (
 
 function HeaderMain() {
   return (
-    <div className="flex items-center justify-between px-10 bg-bgHeader h-28 ">
+    <div className="flex items-center justify-between px-10 bg-bgHeader h-20 ">
       <div>
-        <img src={KmaIcon} className="w-28 h-28" />
+        <img src={KmaIcon} className="w-20 h-20" />
       </div>
       <Dropdown overlay={menu} placement="bottomRight" arrow>
         <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>

@@ -7,6 +7,7 @@ const Lop = lazy(() => import("../pages/Lop"))
 const Khoa = lazy(() => import("../pages/Khoa"))
 const GiaoVien = lazy(() => import("../pages/GiaoVien"))
 const SinhVien = lazy(() => import("../pages/SinhVien"))
+const DiemDanh = lazy(() => import("../pages/DiemDanh"))
 
 const routes = [
     {
@@ -30,9 +31,14 @@ const routes = [
         component: GiaoVien // view rendered
     },
     {
-        path: "/quanly-event", // the url
+        path: "/quanly-hoithao", // the url
         component: Event // view rendered
     },
+    {
+        path: "/diemdanh/:ten_hoithao", // the url
+        component: DiemDanh // view rendered
+    },
+
     {
         path: "/404",
         component: NotFound404

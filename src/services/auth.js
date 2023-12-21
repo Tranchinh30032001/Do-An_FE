@@ -5,7 +5,7 @@ const checkAuth = () => {
     instanceAxios.interceptors.request.use(
         function (config) {
             document.body.classList.add("loading-indicator");
-            const accessToken = localStorage.getItem("access_token");
+            const accessToken = localStorage.getItem("token");
             if (accessToken) {
                 config.headers["Content-Type"] = "application/json";
                 config.headers["Authorization"] = `Bearer ${accessToken}`;

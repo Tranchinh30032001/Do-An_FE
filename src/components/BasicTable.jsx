@@ -13,39 +13,9 @@ import Button from "../components/Button";
 import FieldInput from "../components/Input";
 import { usePagination } from "react-table";
 
-const COLUMNS = [
-  {
-    accessorKey: "id",
-    header: "ID",
-    cell: (props) => <p>{props.getValue()}</p>,
-  },
-  {
-    accessorKey: "lop_id",
-    header: "Lớp ID",
-    cell: (props) => <p>{props.getValue()}</p>,
-  },
-  {
-    accessorKey: "ten_lop",
-    header: "Tên Lớp",
-    cell: (props) => <p>{props.getValue()}</p>,
-  },
-  {
-    accessorKey: "thao_tac",
-    header: "Thao Tác",
-    cell: () => {
-      return (
-        <div className="flex items-center gap-6">
-          <FaEdit className="w-6 h-6 cursor-pointer" />
-          <FaTrashAlt className="w-6 h-6 cursor-pointer" />
-        </div>
-      );
-    },
-  },
-];
-
-function BasicTable() {
+function BasicTable({ COLUMNS, DATA }) {
   const columns = useMemo(() => COLUMNS, []);
-  const data = useMemo(() => lopData, []);
+  const data = useMemo(() => DATA, [DATA]);
   const [columnFilters, setColumFilters] = useState();
 
   const tableInstance = useReactTable({
@@ -77,11 +47,13 @@ function BasicTable() {
         <tbody>
           {tableInstance.getRowModel().rows.map((row) => (
             <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td className={`text-black w-[${cell.column.getSize()}]`} key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
+              {row.getVisibleCells().map((cell) => {
+                return (
+                  <td className={`text-black w-[${cell.column.getSize()}]`} key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                );
+              })}
             </tr>
           ))}
         </tbody>
